@@ -4,7 +4,7 @@
 f=0
 i=1
 
-for (( g=0; g<=12; g++ )) #g = sequence, starts at 0, ends at/before 12 times, inside goes up by 1 each time
+for (( g=0; g<=20; g++ )) #g = sequence, starts at 0, ends at/before 12 times, inside goes up by 1 each time
 do 
 	if (( $f >=100 )) #limits f to a max of 100
 	then
