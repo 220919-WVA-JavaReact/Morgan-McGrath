@@ -1,1 +1,7 @@
+#!/bin/bash
 
+echo "Welcome, please input your username and password."
+read -p "Username: " uname
+read -sp "Password: " pword
+
+printf "\nWelcome, $uname, today's date is $(date).\n"
