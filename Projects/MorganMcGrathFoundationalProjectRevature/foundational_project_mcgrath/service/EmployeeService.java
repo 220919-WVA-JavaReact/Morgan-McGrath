@@ -1,10 +1,10 @@
 package com.revature.foundational_project_morgan.service;
 
 import com.revature.foundational_project_morgan.dao.EmployeeDAO;
-import com.revature.foundational_project_morgan.dao.EmployeeDAOImpl;
 import com.revature.foundational_project_morgan.dao.EmployeeDAOImplPostgres;
 import com.revature.foundational_project_morgan.models.Employee;
 
+import java.util.List;
 import java.util.Scanner;
 //import org.jetbrains.annotations.NotNull;
 
@@ -53,6 +53,21 @@ public class EmployeeService {
         Employee emp = ed.createEmployee(first, last, username, password);
         return emp;
 
+    }
+
+    public void promoteEmployee() {
+        System.out.println("Please enter the username of the employee you wish to promote: ");
+        String username = scanner.nextLine();
+
+        Employee emp = ed.promoteEmployee(username);
+
+    }
+
+    public void viewAllEmployees(){
+        List<Employee> employees = ed.viewAllEmployees();
+        for(Employee employee : employees) {
+            System.out.println(employee);
+        }
     }
 
 

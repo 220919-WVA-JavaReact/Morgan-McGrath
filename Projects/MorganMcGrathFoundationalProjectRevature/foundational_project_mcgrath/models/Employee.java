@@ -38,6 +38,15 @@ public class Employee {
         this.username = username;
         this.password = password;
     }
+    public Employee(int employee_id, String first, String last, String username, boolean manager) {
+        this.employee_id = employee_id;
+        this.first = first;
+        this.last = last;
+        this.username = username;
+        this.manager = manager;
+        this.password = "Information Withheld";
+
+    }
 
     public int getEmployee_id() {
         return employee_id;

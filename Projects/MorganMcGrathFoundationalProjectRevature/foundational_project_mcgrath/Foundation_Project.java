@@ -50,7 +50,7 @@ public class Foundation_Project {
         }
         while (loggedInEmployee != null) {
             if (loggedInEmployee.isManager()) {
-                System.out.println("Press 1 to create a reimbursement request, press 2 view all requests, press 3 to approve requests, press 4 to logout.");
+                System.out.println("Press 1 to create a reimbursement request, press 2 view all requests, press 3 to approve requests, press 4 to view all employees, press 5 to promote employees, press 6 to logout.");
                 //swap 2 to view pending requests, 3 will allow you to complete (approve/deny) pending requests, matching via request ID
                 //maybe have option 4 view all requests, sorted by user
                 String subchoice = scanner.nextLine();
@@ -68,6 +68,14 @@ public class Foundation_Project {
                         break;
 
                     case "4":
+                        es.viewAllEmployees();
+                        break;
+
+                    case "5":
+                        es.promoteEmployee();
+                        break;
+
+                    case "6":
                         System.out.println("Thanks for logging in!");
                         loggedInEmployee = null;
                         break;

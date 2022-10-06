@@ -2,7 +2,6 @@ package com.revature.foundational_project_morgan.service;
 
 
 import com.revature.foundational_project_morgan.dao.RequestDAO;
-//import com.revature.foundational_project_morgan.dao.RequestDAOImpl;
 import com.revature.foundational_project_morgan.dao.RequestDAOImplPostgres;
 import com.revature.foundational_project_morgan.models.Employee;
 import com.revature.foundational_project_morgan.models.Request;
@@ -51,7 +50,10 @@ public class RequestService {
 
 
     public void getAllRequest(){
-        System.out.println(rd.getAllRequest());
+        List<Request> requests = rd.getAllRequest();
+        for (Request request : requests){
+            System.out.println(request);
+        }
 
     }
 

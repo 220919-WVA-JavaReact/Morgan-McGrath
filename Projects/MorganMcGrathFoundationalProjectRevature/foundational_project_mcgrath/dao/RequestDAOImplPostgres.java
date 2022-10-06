@@ -61,7 +61,7 @@ public class RequestDAOImplPostgres implements RequestDAO {
 
         try {
             Statement stmnt = conn.createStatement();
-            String sql = "SELECT * FROM reimbursement_requests";
+            String sql = "SELECT * FROM reimbursement_requests ORDER BY reimbursement_id";
             ResultSet rs = stmnt.executeQuery(sql);
 
 
@@ -76,7 +76,6 @@ public class RequestDAOImplPostgres implements RequestDAO {
                 String approval = rs.getString("approval_status");
 
                 Request req = new Request(id, username, title, amount, location, approval);
-                System.out.println(req);
                 requests.add(req);
             }
         } catch (SQLException e) {
@@ -89,7 +88,7 @@ public class RequestDAOImplPostgres implements RequestDAO {
     public List<Request> getRequestByUsername(String username) {
         List<Request> requests = new ArrayList<>();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM reimbursement_requests WHERE username = ?";
+            String sql = "SELECT * FROM reimbursement_requests WHERE username = ? ORDER BY reimbursement_id";
             PreparedStatement stmnt = conn.prepareStatement(sql);
             stmnt.setString(1, username);
             ResultSet rs;
