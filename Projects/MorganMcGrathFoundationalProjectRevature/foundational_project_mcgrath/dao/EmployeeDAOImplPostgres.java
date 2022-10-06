@@ -80,7 +80,7 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
 
         try(Connection conn = ConnectionUtil.getConnection()){
 
-            String sql = "UPDATE employee_database SET Manager = true WHERE username = ? RETURNING *";
+            String sql = "UPDATE employee_database SET Manager = true WHERE username = ?";
             PreparedStatement stmnt = conn.prepareStatement(sql);
             stmnt.setString(1, username);
 
@@ -111,7 +111,7 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
 
         try {
             Statement stmnt = conn.createStatement();
-            String sql = "SELECT * FROM employee_database ORDER BY Manager";
+            String sql = "SELECT * FROM employee_database ORDER BY Manager ";
             ResultSet rs = stmnt.executeQuery(sql);
 
 
@@ -132,5 +132,36 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
             e.printStackTrace();
         }
         return employees;
+    }
+
+    @Override
+    public Employee demoteEmployee(String username) {
+        Employee emp = new Employee();
+
+        try(Connection conn = ConnectionUtil.getConnection()){
+
+            String sql = "UPDATE employee_database SET Manager = false WHERE username = ?";
+            PreparedStatement stmnt = conn.prepareStatement(sql);
+            stmnt.setString(1, username);
+
+            ResultSet rs;
+            if ((rs = stmnt.executeQuery()) != null){
+                rs.next();
+                int id = rs.getInt("employee_id");
+                String first = rs.getString("first");
+                String last = rs.getString("last");
+                String receivedUsername = rs.getString("username");
+                //String password = rs.getString("password");
+                boolean manager = rs.getBoolean("Manager");
+
+                emp = new Employee(id, first, last, receivedUsername, manager);
+                return emp;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }
 }

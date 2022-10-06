@@ -14,5 +14,7 @@ public interface EmployeeDAO {
 
     List<Employee> viewAllEmployees();
 
+    Employee demoteEmployee(String username);
+
 
 }

@@ -57,6 +57,7 @@ public class EmployeeService {
 
     public void promoteEmployee() {
         System.out.println("Please enter the username of the employee you wish to promote: ");
+        // starting to put together a demotion tool
         String username = scanner.nextLine();
 
         Employee emp = ed.promoteEmployee(username);
@@ -68,6 +69,15 @@ public class EmployeeService {
         for(Employee employee : employees) {
             System.out.println(employee);
         }
+    }
+
+    public void demoteEmployee() {
+        System.out.println("Please enter the username of the employee you wish to demote: ");
+        // starting to put together a demotion tool
+        String username = scanner.nextLine();
+
+        Employee emp = ed.demoteEmployee(username);
+
     }
 
 

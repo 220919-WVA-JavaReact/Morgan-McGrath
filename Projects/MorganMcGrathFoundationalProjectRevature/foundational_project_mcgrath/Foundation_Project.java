@@ -50,7 +50,18 @@ public class Foundation_Project {
         }
         while (loggedInEmployee != null) {
             if (loggedInEmployee.isManager()) {
-                System.out.println("Press 1 to create a reimbursement request, press 2 view all requests, press 3 to approve requests, press 4 to view all employees, press 5 to promote employees, press 6 to logout.");
+                //System.out.println("Press 1 to create a reimbursement request, press 2 view all requests, press 3 to approve requests, press 4 to view all employees, press 5 to promote employees, press 6 to demote employees, press 7 to logout.");
+                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                System.out.println("Press 1 to create a reimbursement request");
+                System.out.println("Press 2 view all requests");
+                System.out.println("Press 3 to approve requests");
+                System.out.println("Press 4 to view all employees");
+                System.out.println("Press 5 to promote employees");
+                System.out.println("Press 6 to demote employees");
+                System.out.println("Press 7 to logout");
+                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+
                 //swap 2 to view pending requests, 3 will allow you to complete (approve/deny) pending requests, matching via request ID
                 //maybe have option 4 view all requests, sorted by user
                 String subchoice = scanner.nextLine();
@@ -76,13 +87,21 @@ public class Foundation_Project {
                         break;
 
                     case "6":
+                        es.demoteEmployee();
+                        break;
+
+                    case "7":
                         System.out.println("Thanks for logging in!");
                         loggedInEmployee = null;
                         break;
 
                 }
             } else if(!loggedInEmployee.isManager()) {
-                System.out.println("Press 1 to create a reimbursement request, press 2 view your requests, press 3 to logout.");
+                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                System.out.println("Press 1 to create a reimbursement request");
+                System.out.println("Press 2 view your requests");
+                System.out.println("Press 3 to logout");
+                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
                 String subchoice = scanner.nextLine();
 
