@@ -6,7 +6,7 @@ public interface EmployeeDAO {
     Employee getByUsername(String employeeUsername);
 
 
-    Employee createEmployee(String employeeFirstname, String employeeLastname, String employeeUsername, String employeePassword, boolean Manager);
+    Employee createEmployee(String employeeFirstname, String employeeLastname, String employeeUsername, String employeePassword);
 
 
 }

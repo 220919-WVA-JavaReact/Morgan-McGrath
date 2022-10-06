@@ -13,14 +13,17 @@ public class Foundation_Project {
 
 
     public static void main(String[] args) {
-        System.out.println("Press 1 to log in, press 2 to register.");
-        //EmployeeService es = new EmployeeService();
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-        scanner.nextLine();
         Employee loggedInEmployee = null;
+        Scanner scanner = new Scanner(System.in);
+        while (loggedInEmployee == null) {
+            System.out.println("Press 1 to log in, press 2 to register.");
+            //EmployeeService es = new EmployeeService();
 
-        if (choice == 1) {
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+
+            if (choice == 1) {
 //            System.out.println("Please enter your Username: ");
 //            String employeeUsername = scanner.nextLine();
 //
@@ -28,9 +31,9 @@ public class Foundation_Project {
 //            String employeePassword = scanner.nextLine();
 
 //            es.login(employeeUsername, employeePassword);
-            loggedInEmployee = es.login();
+                loggedInEmployee = es.login();
 
-        } else if (choice == 2) {
+            } else if (choice == 2) {
 //            System.out.println("Please enter first name: ");
 //            String employeeFirstname = scanner.nextLine();
 //
@@ -42,7 +45,8 @@ public class Foundation_Project {
 //
 //            System.out.println("Please enter Password (max of 20 characters): ");
 //            String employeePassword = scanner.nextLine();
-            loggedInEmployee = es.register();
+                loggedInEmployee = es.register();
+            }
         }
         while (loggedInEmployee != null) {
             if (loggedInEmployee.isManager()) {

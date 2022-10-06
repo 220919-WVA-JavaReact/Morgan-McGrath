@@ -47,10 +47,10 @@ public class EmployeeService {
         System.out.println("Please enter Password (max of 20 characters): ");
         String password = scanner.nextLine();
 
-        System.out.println("If you are a manager press 1, if you are not please press 2: ");
-        int manager = scanner.nextInt();
-        boolean Manager = manager == 1;
-        Employee emp = ed.createEmployee(first, last, username, password, Manager);
+//        System.out.println("If you are a manager press 1, if you are not please press 2: ");
+//        int manager = scanner.nextInt();
+//        boolean Manager = manager == 1;
+        Employee emp = ed.createEmployee(first, last, username, password);
         return emp;
 
     }

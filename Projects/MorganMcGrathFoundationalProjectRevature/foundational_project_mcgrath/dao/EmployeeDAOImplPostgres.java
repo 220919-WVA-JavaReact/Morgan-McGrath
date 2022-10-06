@@ -39,7 +39,7 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
     }
 
     @Override
-    public Employee createEmployee(String first, String last, String username, String password, boolean Manager) {
+    public Employee createEmployee(String first, String last, String username, String password) {
         Employee emp = new Employee();
 
         try (Connection conn = ConnectionUtil.getConnection()) {
@@ -49,7 +49,7 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
             stmnt.setString(2, last);
             stmnt.setString(3, username);
             stmnt.setString(4, password);
-            stmnt.setBoolean(5, Manager);
+            stmnt.setBoolean(5, false);
 
             ResultSet rs;
 
@@ -60,16 +60,16 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
                 String receivedLast = rs.getString("last");
                 String receivedUsername = rs.getString("username");
                 String receivedPassword = rs.getString("password");
-                boolean receivedManager = rs.getBoolean("Manager");
+                boolean manager = rs.getBoolean("Manager");
 
-                emp = new Employee(id, receivedFirst, receivedLast, receivedUsername, receivedPassword, receivedManager);
+                emp = new Employee(id, receivedFirst, receivedLast, receivedUsername, receivedPassword, manager);
                 return emp;
             }
 
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Something went wrong.");
+            System.out.println("Sorry, that username already exists.");
         }
         return null;
     }
