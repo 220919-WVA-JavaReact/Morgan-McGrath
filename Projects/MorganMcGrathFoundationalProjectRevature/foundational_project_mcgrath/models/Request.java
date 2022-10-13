@@ -8,22 +8,25 @@ public class Request {
     private String title;
     private int amount;
     private String location;
+    private String type;
     private String approval;
 
-    public Request(int reimbursement_id, String username, String title, int amount, String location) {
+    public Request(int reimbursement_id, String username, String title, int amount, String type, String location) {
         this.reimbursement_id = reimbursement_id;
         this.username = username;
         this.title = title;
         this.amount = amount;
+        this.type = type;
         this.location = location;
     }
 
-    public Request(int reimbursement_id, String username, String title, int amount, String location, String approval) {
+    public Request(int reimbursement_id, String username, String title, int amount, String location, String type, String approval) {
         this.reimbursement_id = reimbursement_id;
         this.username = username;
         this.title = title;
         this.amount = amount;
         this.location = location;
+        this.type = type;
         this.approval = approval;
     }
 
@@ -70,6 +73,14 @@ public class Request {
         this.location = location;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String isApproval() {
         return approval;
     }
@@ -83,12 +94,12 @@ public class Request {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Request request = (Request) o;
-        return reimbursement_id == request.reimbursement_id && amount == request.amount && approval == request.approval && username.equals(request.username) && title.equals(request.title) && location.equals(request.location);
+        return reimbursement_id == request.reimbursement_id && amount == request.amount && approval == request.approval && username.equals(request.username) && title.equals(request.title) && location.equals(request.location) && type.equals(request.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(reimbursement_id, username, title, amount, location, approval);
+        return Objects.hash(reimbursement_id, username, title, amount, location, type, approval);
     }
 
     @Override
@@ -99,6 +110,7 @@ public class Request {
                 ", title='" + title + '\'' +
                 ", amount=" + amount +
                 ", location='" + location + '\'' +
+                ", type=," + type + '\'' +
                 ", approval=" + approval +
                 '}';
     }

@@ -3,8 +3,12 @@ package com.revature.foundational_project_morgan;
 import com.revature.foundational_project_morgan.models.Employee;
 import com.revature.foundational_project_morgan.service.EmployeeService;
 import com.revature.foundational_project_morgan.service.RequestService;
-
+import com.revature.foundational_project_morgan.models.Level;
 import java.util.Scanner;
+
+import static com.revature.foundational_project_morgan.models.Level.*;
+
+//Look into enum replacement for the manager instead of boolean, look into hashing for basic encryption for your password
 
 public class Foundation_Project {
 
@@ -49,15 +53,16 @@ public class Foundation_Project {
             }
         }
         while (loggedInEmployee != null) {
-            if (loggedInEmployee.isManager()) {
+            if (loggedInEmployee.getLevel().equals(Supervisor)) {
                 //System.out.println("Press 1 to create a reimbursement request, press 2 view all requests, press 3 to approve requests, press 4 to view all employees, press 5 to promote employees, press 6 to demote employees, press 7 to logout.");
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 System.out.println("Press 1 to create a reimbursement request");
                 System.out.println("Press 2 view all requests");
-                System.out.println("Press 3 to approve requests");
-                System.out.println("Press 4 to view all employees");
-                System.out.println("Press 5 to promote employees");
-                System.out.println("Press 6 to demote employees");
+                System.out.println("Press 3 to view all pending requests");
+                System.out.println("Press 4 to approve requests");
+                System.out.println("Press 5 to view all employees");
+                System.out.println("Press 6 to edit employee access");
+                //System.out.println("Press 7 to demote employees");
                 System.out.println("Press 7 to logout");
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
@@ -67,28 +72,32 @@ public class Foundation_Project {
                 String subchoice = scanner.nextLine();
                 switch (subchoice) {
                     case "1":
-                    rs.createRequest(loggedInEmployee);
-                    break;
+                        rs.createRequest(loggedInEmployee);
+                        break;
 
                     case "2":
                         rs.getAllRequest();
                         break;
 
                     case "3":
-                        rs.updateRequest();
+                        rs.getAllPending();
                         break;
 
                     case "4":
-                        es.viewAllEmployees();
+                        rs.updateRequest();
                         break;
 
                     case "5":
-                        es.promoteEmployee();
+                        es.viewAllEmployees();
                         break;
 
                     case "6":
-                        es.demoteEmployee();
+                        es.updateEmployeeAccess();
                         break;
+
+//                    case "7":
+//                        es.demoteEmployee();
+//                        break;
 
                     case "7":
                         System.out.println("Thanks for logging in!");
@@ -96,11 +105,12 @@ public class Foundation_Project {
                         break;
 
                 }
-            } else if(!loggedInEmployee.isManager()) {
+            } else if (loggedInEmployee.getLevel().equals(Associate)) {
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 System.out.println("Press 1 to create a reimbursement request");
                 System.out.println("Press 2 view your requests");
-                System.out.println("Press 3 to logout");
+                System.out.println("Press 3 to view sort your requests by type");
+                System.out.println("Press 4 to logout");
                 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
                 String subchoice = scanner.nextLine();
@@ -115,6 +125,9 @@ public class Foundation_Project {
                         break;
 
                     case "3":
+                        rs.getRequestByType(loggedInEmployee.getUsername());
+
+                    case "4":
                         System.out.println("See you next time!");
                         loggedInEmployee = null;
                         break;
@@ -122,7 +135,47 @@ public class Foundation_Project {
                     default:
                         System.out.println("Invalid Input.");
                 }
+            } else {
+                    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                    System.out.println("Press 1 to create a reimbursement request");
+                    System.out.println("Press 2 view all requests");
+                    System.out.println("Press 3 to view all pending requests");
+                    System.out.println("Press 4 to approve requests");
+                    System.out.println("Press 5 to view all employees");
+                    System.out.println("Press 6 to logout");
+                    System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+
+                    //swap 2 to view pending requests, 3 will allow you to complete (approve/deny) pending requests, matching via request ID
+                    //maybe have option 4 view all requests, sorted by user
+                    String subchoice = scanner.nextLine();
+                    switch (subchoice) {
+                        case "1":
+                            rs.createRequest(loggedInEmployee);
+                            break;
+
+                        case "2":
+                            rs.getAllRequest();
+                            break;
+
+                        case "3":
+                            rs.getAllPending();
+
+                        case "4":
+                            rs.updateRequest();
+                            break;
+
+                        case "5":
+                            es.viewAllEmployees();
+                            break;
+
+                        case "6":
+                            System.out.println("Thanks for logging in!");
+                            loggedInEmployee = null;
+                            break;
+
+                    }
+                }
             }
         }
     }
-}
