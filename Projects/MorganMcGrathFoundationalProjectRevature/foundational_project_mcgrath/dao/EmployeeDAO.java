@@ -1,7 +1,7 @@
-package com.revature.foundational_project_morgan.dao;
+package com.revature.foundational_project_mcgrath.dao;
 
-import com.revature.foundational_project_morgan.models.Employee;
-import com.revature.foundational_project_morgan.models.Level;
+import com.revature.foundational_project_mcgrath.models.Employee;
+import com.revature.foundational_project_mcgrath.models.Level;
 
 import java.util.List;
 

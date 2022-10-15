@@ -1,4 +1,4 @@
-package com.revature.foundational_project_morgan.servlets;
+package com.revature.foundational_project_mcgrath.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

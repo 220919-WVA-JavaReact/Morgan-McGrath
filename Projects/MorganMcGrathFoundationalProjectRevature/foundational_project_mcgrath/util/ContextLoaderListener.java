@@ -1,17 +1,14 @@
-package com.revature.foundational_project_morgan.util;
+package com.revature.foundational_project_mcgrath.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.foundational_project_morgan.servlets.EmployeeServlet;
-import com.revature.foundational_project_morgan.servlets.ReimbursementServlet;
+import com.revature.foundational_project_mcgrath.servlets.EmployeeServlet;
+import com.revature.foundational_project_mcgrath.servlets.ReimbursementServlet;
 
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRegistration;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class ContextLoaderListener implements ServletContextListener {

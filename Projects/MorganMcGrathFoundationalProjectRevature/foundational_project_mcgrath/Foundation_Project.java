@@ -1,12 +1,12 @@
-package com.revature.foundational_project_morgan;
+package com.revature.foundational_project_mcgrath;
 
-import com.revature.foundational_project_morgan.models.Employee;
-import com.revature.foundational_project_morgan.service.EmployeeService;
-import com.revature.foundational_project_morgan.service.RequestService;
-import com.revature.foundational_project_morgan.models.Level;
+import com.revature.foundational_project_mcgrath.models.Employee;
+import com.revature.foundational_project_mcgrath.service.EmployeeService;
+import com.revature.foundational_project_mcgrath.service.RequestService;
+
 import java.util.Scanner;
 
-import static com.revature.foundational_project_morgan.models.Level.*;
+import static com.revature.foundational_project_mcgrath.models.Level.*;
 
 //Look into enum replacement for the manager instead of boolean, look into hashing for basic encryption for your password
 

@@ -1,4 +1,4 @@
-package com.revature.foundational_project_morgan.models;
+package com.revature.foundational_project_mcgrath.models;
 
 import java.util.Objects;
 

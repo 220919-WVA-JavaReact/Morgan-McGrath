@@ -1,15 +1,13 @@
-package com.revature.foundational_project_morgan.service;
+package com.revature.foundational_project_mcgrath.service;
 
 
-import com.revature.foundational_project_morgan.dao.RequestDAO;
-import com.revature.foundational_project_morgan.dao.RequestDAOImplPostgres;
-import com.revature.foundational_project_morgan.models.Employee;
-import com.revature.foundational_project_morgan.models.Request;
+import com.revature.foundational_project_mcgrath.dao.RequestDAO;
+import com.revature.foundational_project_mcgrath.dao.RequestDAOImplPostgres;
+import com.revature.foundational_project_mcgrath.models.Employee;
+import com.revature.foundational_project_mcgrath.models.Request;
 
 import java.util.List;
 import java.util.Scanner;
-
-import static com.revature.foundational_project_morgan.Foundation_Project.es;
 
 public class RequestService {
     Scanner scanner = new Scanner(System.in);

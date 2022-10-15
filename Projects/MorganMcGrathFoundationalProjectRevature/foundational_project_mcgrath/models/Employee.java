@@ -1,4 +1,4 @@
-package com.revature.foundational_project_morgan.models;
+package com.revature.foundational_project_mcgrath.models;
 
 import java.util.Objects;
 
@@ -21,13 +21,7 @@ public class Employee {
         this.level = level;
     }
 
-//    public Employee(int employeeID, String employeeFirstname, String employeeLastname, String employeeUsername, String employeePassword) {
-//        this.EmployeeID = employeeID;
-//        this.employeeFirstname = employeeFirstname;
-//        this.employeeLastname = employeeLastname;
-//        this.employeeUsername = employeeUsername;
-//        this.employeePassword = employeePassword;
-//    }
+
 
 
     public Employee(String username, String password) {
@@ -115,6 +109,7 @@ public class Employee {
         this.level = level;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -139,4 +134,7 @@ public class Employee {
                 ", level='" + level + '\'' +
                 '}';
     }
+
+
+
 }

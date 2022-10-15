@@ -1,6 +1,5 @@
-package com.revature.foundational_project_morgan.util;
+package com.revature.foundational_project_mcgrath.util;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -28,71 +27,46 @@ public class ConnectionUtil {
                 return conn;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Sorry, couldn't establish a connection");;
             return null;
         }
 
-        // This is the least secure way
-        // jdbc:postgresql://hostname:port/databaseName
-        // host: database-1.cdqpiicocrng.us-west-2.rds.amazonaws.com
-        //
-//        String url = "jdbc:postgresql://database-1.cdqpiicocrng.us-west-2.rds.amazonaws.com:5432/postgres";
-//        String username = "postgres";
-//        String password = "f0xtr0t487";
-//        try {
-//            conn = DriverManager.getConnection(url, username, password);
-//            System.out.println("Established new connection");
-//        } catch (SQLException e) {
-//            System.out.println("Could not establish connection");
-//            e.printStackTrace();
-//        }
+        String url = "";
+        String username = "";
+        String password = "";
 
-        // add these to application.properties file
-//        String url = "";
-//        String username = "";
-//        String password = "";
-//
-//        Properties prop = new Properties();
-//
-//
-//        try {
-//            prop.load(new FileReader("src/main/resources/application.properties"));
-//            url = prop.getProperty("url");
-//            username = prop.getProperty("username");
-//            password = prop.getProperty("password");
-//            conn = DriverManager.getConnection(url, username, password);
-//            System.out.println("Established new connection");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.out.println("Could not find properties file!");
-//        } catch (SQLException e) {
-//            System.out.println("Could not establish connection!");
-//            e.printStackTrace();
-//        }
-        //Most secure method
+        Properties prop = new Properties();
 
-        // we are going to store our connection into our environmental variables
-
-        //now that we've stored them in our environ variables
-
-        //now we need to pull them from environment variables
-
-//        String url = System.getenv("url");
-//        String username = System.getenv("username");
-//        String password = System.getenv("password");
-        String url = "jdbc:postgresql://database-1.c6ui37l0rhvg.us-east-1.rds.amazonaws.com:5432/postgres";
-        String username = "postgres";
-        String password = "f0xtr0t487";
 
         try {
-            Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection(url, username, password);
+            prop.load(new FileReader("C:\\Users\\grimm\\Revature\\Test coding\\JavaNotes\\JavaFundamentals\\src\\main\\resources\\application.properties"));
 
-            } catch (SQLException | ClassNotFoundException e) {
+            // Now we can extract the values from the application.properties
+            url = prop.getProperty("url");
+            username = prop.getProperty("username");
+            password = prop.getProperty("password");
+
+            // Use the credentials to establish a new connection
+            conn = DriverManager.getConnection(url, username, password);
+            System.out.println("Established connection to database!");
+
+        } catch (IOException e) {
+            System.out.println("Property file not found!");
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
             System.out.println("Could not establish connection");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return conn;
+    }
+
+    static{
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Failed to load PostgreSQL Driver");
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,7 +1,7 @@
-package com.revature.foundational_project_morgan.dao;
+package com.revature.foundational_project_mcgrath.dao;
 
-import com.revature.foundational_project_morgan.util.ConnectionUtil;
-import com.revature.foundational_project_morgan.models.Request;
+import com.revature.foundational_project_mcgrath.util.ConnectionUtil;
+import com.revature.foundational_project_mcgrath.models.Request;
 
 import java.sql.*;
 import java.util.ArrayList;

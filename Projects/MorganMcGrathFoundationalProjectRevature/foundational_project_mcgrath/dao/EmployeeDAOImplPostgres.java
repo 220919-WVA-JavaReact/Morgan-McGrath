@@ -1,14 +1,14 @@
-package com.revature.foundational_project_morgan.dao;
+package com.revature.foundational_project_mcgrath.dao;
 
-import com.revature.foundational_project_morgan.util.ConnectionUtil;
-import com.revature.foundational_project_morgan.models.Employee;
-import com.revature.foundational_project_morgan.models.Level;
+import com.revature.foundational_project_mcgrath.util.ConnectionUtil;
+import com.revature.foundational_project_mcgrath.models.Employee;
+import com.revature.foundational_project_mcgrath.models.Level;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.revature.foundational_project_morgan.models.Level.Associate;
+import static com.revature.foundational_project_mcgrath.models.Level.Associate;
 
 public class EmployeeDAOImplPostgres implements EmployeeDAO {
     @Override
@@ -54,7 +54,7 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
     }
 
     @Override
-    public Employee createEmployee(String first, String last, String username, String password) {
+    public Employee createEmployee(String first, String last, String username, String password) throws NullPointerException {
         Employee emp = new Employee();
 
         try (Connection conn = ConnectionUtil.getConnection()) {
@@ -76,28 +76,19 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
                 String receivedUsername = rs.getString("username");
                 String receivedPassword = rs.getString("password");
                 Level receivedAccess = Level.valueOf(rs.getString("access"));
-//                Level level = null;
-//                switch(receivedAccess){
-//                    case "Associate":
-//                        level = Associate;
-//                        break;
-//                    case "Manager":
-//                        level = Level.Manager;
-//                        break;
-//                    case "Supervisor":
-//                        level = Level.Supervisor;
-//                }
+
 
                 emp = new Employee(id, receivedFirst, receivedLast, receivedUsername, receivedPassword, receivedAccess);
-                return emp;
+
             }
 
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | NullPointerException e) {
+
             System.out.println("Sorry, that username already exists.");
+            return null;
         }
-        return null;
+        return emp;
     }
 
     @Override
@@ -159,9 +150,9 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
                 String first = rs.getString("first");
                 String last = rs.getString("last");
                 String username = rs.getString("username");
-//                String password = "Information Withheld";
+
                 Level access = Level.valueOf(rs.getString("access"));
-//
+
 
 
                 Employee emp = new Employee(id, first, last, username, access);
@@ -173,34 +164,6 @@ public class EmployeeDAOImplPostgres implements EmployeeDAO {
         return employees;
     }
 
-//    @Override
-//    public Employee demoteEmployee(String username) {
-//        Employee emp = new Employee();
-//
-//        try(Connection conn = ConnectionUtil.getConnection()){
-//
-//            String sql = "UPDATE employee_database SET Manager = false WHERE username = ? RETURNING *";
-//            PreparedStatement stmnt = conn.prepareStatement(sql);
-//            stmnt.setString(1, username);
-//
-//            ResultSet rs;
-//            if ((rs = stmnt.executeQuery()) != null){
-//                rs.next();
-//                int id = rs.getInt("employee_id");
-//                String first = rs.getString("first");
-//                String last = rs.getString("last");
-//                String receivedUsername = rs.getString("username");
-//                //String password = rs.getString("password");
-//                boolean manager = rs.getBoolean("Manager");
-//
-//                emp = new Employee(id, first, last, receivedUsername, manager);
-//                return emp;
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return emp;
-//    }
+
+
 }

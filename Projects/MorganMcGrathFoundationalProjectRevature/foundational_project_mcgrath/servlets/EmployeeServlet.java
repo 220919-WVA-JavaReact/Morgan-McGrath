@@ -1,13 +1,10 @@
-package com.revature.foundational_project_morgan.servlets;
+package com.revature.foundational_project_mcgrath.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.foundational_project_morgan.dao.EmployeeDAOImplPostgres;
-import com.revature.foundational_project_morgan.models.Employee;
-import com.revature.foundational_project_morgan.service.EmployeeService;
+import com.revature.foundational_project_mcgrath.models.Employee;
+import com.revature.foundational_project_mcgrath.service.EmployeeService;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +15,6 @@ import java.time.LocalDateTime;
 
 public class EmployeeServlet extends HttpServlet {
 
-    EmployeeDAOImplPostgres ed;
     EmployeeService es = new EmployeeService();
 
     private final ObjectMapper mapper;
@@ -64,7 +60,7 @@ public class EmployeeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //POST requests are generally used for the creation of data in an application
-        System.out.println("[LOG] - UserServlet received a POST request at " + LocalDateTime.now());
+        //System.out.println("[LOG] - UserServlet received a POST request at " + LocalDateTime.now());
 
         //To print out from input stream
 //        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(req.getInputStream()));
@@ -73,13 +69,47 @@ public class EmployeeServlet extends HttpServlet {
 //            System.out.println(line);
 //       }
         //ObjectMapper mapper = new ObjectMapper();
-        Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
-        Employee emp = es.login(employee.getUsername(), employee.getPassword());
-        String responsePayload = mapper.writeValueAsString(emp);
-        resp.getWriter().write(responsePayload);
+        if(req.getParameter("action").equals("login")) {
+            Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
+            Employee emp = es.login(employee.getUsername(), employee.getPassword());
+            String responsePayload = mapper.writeValueAsString(emp);
+            if (responsePayload.equals("null")) {
+                resp.getWriter().write("Sorry, that login was incorrect. Please check your credentials.");
+            } else {
+                resp.getWriter().write("Welcome back, " + emp.getFirst() + "! What would you like to do today?");
+            }
+        } else if (req.getParameter("action").equals("register")){
+            Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
+            Employee emp = es.register(employee.getFirst(), employee.getLast(), employee.getUsername(), employee.getPassword());
+            String responsePayload = mapper.writeValueAsString(emp); //+ "Your access level is " + emp.getLevel()
+            if (responsePayload.equals("null")){
+                resp.getWriter().write("Sorry, too many users with that name! Try an xX_*insertusername*_Xx");
+            } else {
+                resp.getWriter().write("Welcome, " + emp.getFirst() + "! Your access level is: " + emp.getLevel() + ". What would you like to do today?");
+            }
+//            if (!employee.getUsername().equals("")) {
+//                String responsePayload = mapper.writeValueAsString("Thank you for registering " + emp.getFirst() + ". " + "Your access level is " + emp.getLevel());
+//                resp.getWriter().write(responsePayload);
+//            } else {
+//                String responsePayload = mapper.writeValueAsString("Sorry, that username is taken. Try again");
+//                resp.getWriter().write(responsePayload);
+            }
+//        } else if (req.getParameter("action").equals("logout")){
+//
+//        }
+
+
+
         //at this point newUser could be sent to a service layer for validation which would then send it to
         //the DAO layer to be created in the DB
-        System.out.println(employee);
+//        System.out.println("Welcome, " + employee.getFirst());
+
+
+
+//        Employee acc = es. updateEmployeeAccess(employee.getUsername(), employee.getLevel());
+//        String rPayload = mapper.writeValueAsString(acc);
+//        resp.getWriter().write(rPayload);
+//        System.out.println(employee);
 
 
         //resp.setStatus(204);

@@ -1,15 +1,14 @@
-package com.revature.foundational_project_morgan.service;
+package com.revature.foundational_project_mcgrath.service;
 
-import com.revature.foundational_project_morgan.dao.EmployeeDAO;
-import com.revature.foundational_project_morgan.dao.EmployeeDAOImplPostgres;
-import com.revature.foundational_project_morgan.models.Employee;
-import com.revature.foundational_project_morgan.models.Level;
+import com.revature.foundational_project_mcgrath.dao.EmployeeDAO;
+import com.revature.foundational_project_mcgrath.dao.EmployeeDAOImplPostgres;
+import com.revature.foundational_project_mcgrath.models.Employee;
+import com.revature.foundational_project_mcgrath.models.Level;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.revature.foundational_project_morgan.models.Level.*;
+import static com.revature.foundational_project_mcgrath.models.Level.*;
 //import org.jetbrains.annotations.NotNull;
 
 public class EmployeeService {
@@ -38,15 +37,15 @@ public class EmployeeService {
             }
     }
 
-    public Employee login(String username, String password){
+    public Employee login(String username, String password) throws NullPointerException{
         Employee employee = ed.getByUsername(username);
         if (employee.getPassword().equals(password)) {
-            System.out.println("Thank you for logging in.");
-            System.out.println("Welcome, " + employee.getFirst() + "!");
+//            System.out.println("Thank you for logging in.");
+//            System.out.println("Welcome, " + employee.getFirst() + "!");
 
             return employee;
         } else {
-            System.out.println("Sorry, that information is incorrect.");
+//            System.out.println("Sorry, that information is incorrect.");
             return null;
         }
     }
@@ -54,8 +53,6 @@ public class EmployeeService {
 
 
     public Employee register(){
-
-
 
         System.out.println("Please enter Firstname: ");
         String first = scanner.nextLine();
@@ -85,13 +82,23 @@ public class EmployeeService {
             password = scanner.nextLine();
         }
 
-//        System.out.println("If you are a manager press 1, if you are not please press 2: ");
-//        int manager = scanner.nextInt();
-//        boolean Manager = manager == 1;
         Employee emp = ed.createEmployee(first, last, username, password);
         return emp;
 
     }
+
+    public Employee register(String first, String last, String username, String password) {
+        return ed.createEmployee(first, last, username, password);
+//        if (!employee.getUsername().equals("")){
+//            return employee;
+//        }
+//        return null;
+    }
+
+//    public Employee register (String first, String last, String username, String password){
+//        Employee employee = ed.createEmployee(first, last, username, password);
+//        return employee;
+//    }
 
     public void updateEmployeeAccess() {
 
@@ -124,9 +131,15 @@ public class EmployeeService {
     }
 
     public Employee updateEmployeeAccess(String username, Level access){
+        System.out.println("Please input the employee you wish to edit and the new level of access");
         Employee emp = ed.updateEmployeeAccess(username, access);
+        if (emp.getLevel().equals(Associate)){
+            System.out.println("Sorry, only managers and supervisors can promote employees");
+        }
         return emp;
     }
+
+
 
     public void viewAllEmployees(){
         System.out.println("+--------------------+\n" + "List of Employees" + "\n+--------------------+");
@@ -137,18 +150,7 @@ public class EmployeeService {
         }
     }
 
-//    public void demoteEmployee() {
-//
-//        String username = null;
-//        while (username.equals(null)) {
-//            System.out.println("Please enter the username of the employee you wish to demote: ");
-//            // starting to put together a demotion tool
-//            username = scanner.nextLine();
-//        }
-//
-//        Employee emp = ed.demoteEmployee(username);
-//
-//    }
+
 
 
 }

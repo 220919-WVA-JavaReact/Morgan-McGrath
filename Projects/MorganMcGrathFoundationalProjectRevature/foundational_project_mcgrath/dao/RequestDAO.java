@@ -1,6 +1,6 @@
-package com.revature.foundational_project_morgan.dao;
+package com.revature.foundational_project_mcgrath.dao;
 
-import com.revature.foundational_project_morgan.models.Request;
+import com.revature.foundational_project_mcgrath.models.Request;
 
 import java.util.List;
 
