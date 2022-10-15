@@ -83,7 +83,7 @@ public class EmployeeServlet extends HttpServlet {
             Employee emp = es.register(employee.getFirst(), employee.getLast(), employee.getUsername(), employee.getPassword());
             String responsePayload = mapper.writeValueAsString(emp); //+ "Your access level is " + emp.getLevel()
             if (responsePayload.equals("null")){
-                resp.getWriter().write("Sorry, too many users with that name! Try an xX_*insertusername*_Xx");
+                resp.getWriter().write("Sorry, too many users with that name!");
             } else {
                 resp.getWriter().write("Welcome, " + emp.getFirst() + "! Your access level is: " + emp.getLevel() + ". What would you like to do today?");
             }
