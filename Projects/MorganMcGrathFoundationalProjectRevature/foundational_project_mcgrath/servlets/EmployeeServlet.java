@@ -2,15 +2,17 @@ package com.revature.foundational_project_mcgrath.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.foundational_project_mcgrath.models.Employee;
+import com.revature.foundational_project_mcgrath.models.Level;
 import com.revature.foundational_project_mcgrath.service.EmployeeService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
-
+import java.util.HashMap;
 
 
 public class EmployeeServlet extends HttpServlet {
@@ -59,16 +61,6 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //POST requests are generally used for the creation of data in an application
-        //System.out.println("[LOG] - UserServlet received a POST request at " + LocalDateTime.now());
-
-        //To print out from input stream
-//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(req.getInputStream()));
-//        String line;
-//        while ((line = bufferedReader.readLine()) != null){
-//            System.out.println(line);
-//       }
-        //ObjectMapper mapper = new ObjectMapper();
         if(req.getParameter("action").equals("login")) {
             Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
             Employee emp = es.login(employee.getUsername(), employee.getPassword());
@@ -81,49 +73,44 @@ public class EmployeeServlet extends HttpServlet {
         } else if (req.getParameter("action").equals("register")){
             Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
             Employee emp = es.register(employee.getFirst(), employee.getLast(), employee.getUsername(), employee.getPassword());
-            String responsePayload = mapper.writeValueAsString(emp); //+ "Your access level is " + emp.getLevel()
+            String responsePayload = mapper.writeValueAsString(emp);
             if (responsePayload.equals("null")){
                 resp.getWriter().write("Sorry, too many users with that name!");
             } else {
                 resp.getWriter().write("Welcome, " + emp.getFirst() + "! Your access level is: " + emp.getLevel() + ". What would you like to do today?");
             }
-//            if (!employee.getUsername().equals("")) {
-//                String responsePayload = mapper.writeValueAsString("Thank you for registering " + emp.getFirst() + ". " + "Your access level is " + emp.getLevel());
-//                resp.getWriter().write(responsePayload);
-//            } else {
-//                String responsePayload = mapper.writeValueAsString("Sorry, that username is taken. Try again");
-//                resp.getWriter().write(responsePayload);
-            }
-//        } else if (req.getParameter("action").equals("logout")){
-//
-//        }
-
-
-
-        //at this point newUser could be sent to a service layer for validation which would then send it to
-        //the DAO layer to be created in the DB
-//        System.out.println("Welcome, " + employee.getFirst());
-
-
-
-//        Employee acc = es. updateEmployeeAccess(employee.getUsername(), employee.getLevel());
-//        String rPayload = mapper.writeValueAsString(acc);
-//        resp.getWriter().write(rPayload);
-//        System.out.println(employee);
-
-
-        //resp.setStatus(204);
+        }
 
     }
 
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+        if (req.getParameter("action").equals("promotion")) {
+            HashMap<String, Object> jsonInput = mapper.readValue(req.getInputStream(), HashMap.class);
+            Employee employee = es.getEmployee((String) jsonInput.get("username"));
+            if (!employee.getLevel().equals(Level.valueOf((String) jsonInput.get("level")))) {
+                Employee emp = es.updateEmployeeAccess((String) jsonInput.get("username"), Level.valueOf((String) jsonInput.get("level"))); //talk to bryan tomorrow about the casting error
+                String responsePayload = mapper.writeValueAsString((emp));
+                if (responsePayload.equals("null")) {
+                    resp.getWriter().write("Sorry, please make sure the username and access level is correct");
+//            } else if (emp.getLevel() == (emp.getLevel())) {
+//                resp.getWriter().write("Sorry, " + emp.getFirst() + "'s access level is already " + emp.getLevel());
+                } else {
+                    resp.getWriter().write("Thank you, " + emp.getFirst() + "'s access has been updated to " + emp.getLevel());
+                }
+            } else {
+                resp.getWriter().write("Sorry, " + employee.getFirst() + "'s access level is already " + employee.getLevel());
+            }
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
+        HttpSession session = req.getSession(true);
+        if (session != null){
+            session.invalidate();
+            resp.getWriter().write("Thanks for logging in! See you next time!");
+        }
     }
 }

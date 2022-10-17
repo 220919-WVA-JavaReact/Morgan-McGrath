@@ -133,9 +133,9 @@ public class EmployeeService {
     public Employee updateEmployeeAccess(String username, Level access){
         System.out.println("Please input the employee you wish to edit and the new level of access");
         Employee emp = ed.updateEmployeeAccess(username, access);
-        if (emp.getLevel().equals(Associate)){
-            System.out.println("Sorry, only managers and supervisors can promote employees");
-        }
+//        if (emp.getLevel().equals(Associate)){
+//            System.out.println("Sorry, only managers and supervisors can promote employees");
+//        }
         return emp;
     }
 
@@ -148,6 +148,9 @@ public class EmployeeService {
             System.out.println("ID #: " + employee.getEmployee_id() + "\n Username: " + employee.getUsername() + "\n Name: " + employee.getFirst() + " " + employee.getLast() + "\n Access Level: " + employee.getLevel() + "\n+---------------+");
             //System.out.println(employee);
         }
+    }
+    public Employee getEmployee(String username){
+        return ed.getByUsername(username);
     }
 
 

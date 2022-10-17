@@ -2,7 +2,7 @@ package com.revature.foundational_project_mcgrath.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.foundational_project_mcgrath.servlets.EmployeeServlet;
-import com.revature.foundational_project_mcgrath.servlets.ReimbursementServlet;
+import com.revature.foundational_project_mcgrath.servlets.RequestServlet;
 
 
 import javax.servlet.ServletContext;
@@ -31,12 +31,12 @@ public class ContextLoaderListener implements ServletContextListener {
     //we can also programmatically define/register our servlets with the container here
         ObjectMapper mapper = new ObjectMapper();
         EmployeeServlet employeeServlet = new EmployeeServlet(mapper);
-        ReimbursementServlet reimbursementServlet = new ReimbursementServlet(mapper);
+        RequestServlet requestServlet = new RequestServlet(mapper);
 
         //now I need to register it with the context itself
         ServletContext context = sce.getServletContext();
         ServletRegistration.Dynamic registeredEmployeeServlet = context.addServlet("EmployeeServlet", employeeServlet);
-        ServletRegistration.Dynamic registeredReimbursementServlet = context.addServlet("ReimbursementServlet", reimbursementServlet);
+        ServletRegistration.Dynamic registeredRequestServlet = context.addServlet("RequestServlet", requestServlet);
 
 
 
@@ -46,8 +46,8 @@ public class ContextLoaderListener implements ServletContextListener {
 //        registeredEmployeeServlet.setInitParameter("another-key", "another-value");
 
 
-        registeredReimbursementServlet.addMapping("/reimbursement");
-        registeredReimbursementServlet.setLoadOnStartup(3);
+        registeredRequestServlet.addMapping("/request");
+        registeredRequestServlet.setLoadOnStartup(3);
 //        registeredReimbursementServlet.setInitParameter("reimbursement-servlet-key", "reimbursement-init-value");
 
 

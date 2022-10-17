@@ -1,6 +1,7 @@
 package com.revature.foundational_project_mcgrath.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.foundational_project_mcgrath.service.RequestService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,10 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-public class ReimbursementServlet extends HttpServlet {
+public class RequestServlet extends HttpServlet {
     private final ObjectMapper mapper;
+    RequestService rs = new RequestService();
 
-    public ReimbursementServlet(ObjectMapper mapper) {
+    public RequestServlet(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 
@@ -26,4 +28,12 @@ public class ReimbursementServlet extends HttpServlet {
         resp.getWriter().write("Expect this to transform into a log in page, which will lead into a profile depending on access level\n");
         resp.getWriter().write("\nCurrent time: " + LocalDateTime.now());
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    if (req.getParameter("action").equals("submit")){
+
+    }
+    }
 }
+
