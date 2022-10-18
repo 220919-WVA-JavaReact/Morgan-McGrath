@@ -30,6 +30,10 @@ public class Request {
         this.approval = approval;
     }
 
+    public Request(String approval){
+        this.approval = approval;
+    }
+
     public Request() {
     }
 

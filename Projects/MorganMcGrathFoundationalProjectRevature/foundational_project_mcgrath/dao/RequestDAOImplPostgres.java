@@ -120,6 +120,39 @@ public class RequestDAOImplPostgres implements RequestDAO {
     }
 
     @Override
+    public List<Request> getRequestByApproval (String approval){
+        List<Request> requests = new ArrayList<>();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM reimbursement_requests WHERE approval_status = ? ORDER BY reimbursement_id";
+            PreparedStatement stmnt = conn.prepareStatement(sql);
+            stmnt.setString(1, approval);
+            ResultSet rs;
+
+
+            if ((rs = stmnt.executeQuery()) != null) {
+                while (rs.next()) {
+
+                    int id = rs.getInt("reimbursement_id");
+                    String username = rs.getString("username");
+                    String title = rs.getString("title");
+                    int amount = rs.getInt("amount");
+                    String location = rs.getString("location");
+                    String newType = rs.getString("type");
+                    String receivedApproval = rs.getString("approval_status");
+
+                    Request req = new Request(id, username, title, amount, location, newType, receivedApproval);
+                    requests.add(req);
+                }
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return requests;
+    }
+
+    @Override
     public Request updateRequest(int reimbursement_id, String approval_status) {
 
         Request req = new Request();

@@ -66,6 +66,7 @@ public class EmployeeServlet extends HttpServlet {
             Employee emp = es.login(employee.getUsername(), employee.getPassword());
             String responsePayload = mapper.writeValueAsString(emp);
             if (responsePayload.equals("null")) {
+                resp.setStatus(400);
                 resp.getWriter().write("Sorry, that login was incorrect. Please check your credentials.");
             } else {
                 resp.getWriter().write("Welcome back, " + emp.getFirst() + "! What would you like to do today?");
@@ -75,8 +76,10 @@ public class EmployeeServlet extends HttpServlet {
             Employee emp = es.register(employee.getFirst(), employee.getLast(), employee.getUsername(), employee.getPassword());
             String responsePayload = mapper.writeValueAsString(emp);
             if (responsePayload.equals("null")){
+                resp.setStatus(400);
                 resp.getWriter().write("Sorry, too many users with that name!");
             } else {
+                resp.setStatus(201);
                 resp.getWriter().write("Welcome, " + emp.getFirst() + "! Your access level is: " + emp.getLevel() + ". What would you like to do today?");
             }
         }
@@ -90,16 +93,20 @@ public class EmployeeServlet extends HttpServlet {
             HashMap<String, Object> jsonInput = mapper.readValue(req.getInputStream(), HashMap.class);
             Employee employee = es.getEmployee((String) jsonInput.get("username"));
             if (!employee.getLevel().equals(Level.valueOf((String) jsonInput.get("level")))) {
-                Employee emp = es.updateEmployeeAccess((String) jsonInput.get("username"), Level.valueOf((String) jsonInput.get("level"))); //talk to bryan tomorrow about the casting error
+                Employee emp = es.updateEmployeeAccess((String) jsonInput.get("username"), Level.valueOf((String) jsonInput.get("level")));
                 String responsePayload = mapper.writeValueAsString((emp));
-                if (responsePayload.equals("null")) {
+                //if (!jsonInput.equals("Manager") | !jsonInput.equals("Associate") | !jsonInput.equals("Supervisor")) {
+                if (responsePayload.equals("null")){
+                    resp.setStatus(400);
                     resp.getWriter().write("Sorry, please make sure the username and access level is correct");
 //            } else if (emp.getLevel() == (emp.getLevel())) {
 //                resp.getWriter().write("Sorry, " + emp.getFirst() + "'s access level is already " + emp.getLevel());
                 } else {
+                    resp.setStatus(200);
                     resp.getWriter().write("Thank you, " + emp.getFirst() + "'s access has been updated to " + emp.getLevel());
                 }
             } else {
+                resp.setStatus(400);
                 resp.getWriter().write("Sorry, " + employee.getFirst() + "'s access level is already " + employee.getLevel());
             }
         }

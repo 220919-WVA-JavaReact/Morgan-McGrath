@@ -11,6 +11,8 @@ public interface RequestDAO {
 
     List<Request> getRequestByType(String username, String Type);
 
+    List<Request> getRequestByApproval(String approval);
+
     Request updateRequest(int reimbursement_id, String approval_status);
 
     List<Request> getAllPending();

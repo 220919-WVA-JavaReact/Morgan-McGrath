@@ -80,6 +80,10 @@ public class RequestService {
 
     }
 
+    public Request createRequest(String username, String title, int amount, String location, String type){
+        return rd.createRequest(username, title, amount, location, type);
+    }
+
     public void getRequestByType(String username){
         //System.out.println(rd.getRequestByUsername(username));
         System.out.println("Which type of request?");
@@ -123,6 +127,13 @@ public class RequestService {
 
     }
 
+    public List<Request> getRequestByApproval(String approval){
+        List<Request> requests = rd.getRequestByApproval(approval);
+        return requests;
+    }
+
+
+
     public void getAllPending(){
         List<Request> requests = rd.getAllPending();
         if (requests.size() > 0) {
@@ -132,6 +143,11 @@ public class RequestService {
         } else {
             System.out.println("Sorry, there are no pending requests.");
         }
+    }
+
+    public List<Request> getAllPending(String username){
+        List<Request> requests  = rd.getAllPending();
+        return requests;
     }
 
     public void updateRequest(){
@@ -169,6 +185,10 @@ public class RequestService {
             System.out.println("A verdict has been reached.");
         }
 
+    }
+
+    public Request updateRequest(int reimbursement_id, String approval){
+        return rd.updateRequest(reimbursement_id, approval);
     }
     public void getRequestByUsername (String username){
         List<Request> requests = rd.getRequestByUsername(username);
