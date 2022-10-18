@@ -145,8 +145,18 @@ public class RequestService {
         }
     }
 
-    public List<Request> getAllPending(String username){
+    public List<Request> getAllPending(String approval){
         List<Request> requests  = rd.getAllPending();
+        return requests;
+    }
+
+    public List<Request> getAllManager(String approval){
+        List<Request> requests = rd.getAllRequest();
+        return requests;
+    }
+
+    public List<Request> getAllUser(String username){
+        List<Request> requests = rd.getAllUser(username);
         return requests;
     }
 

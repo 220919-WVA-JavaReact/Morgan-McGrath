@@ -69,6 +69,9 @@ public class EmployeeServlet extends HttpServlet {
                 resp.setStatus(400);
                 resp.getWriter().write("Sorry, that login was incorrect. Please check your credentials.");
             } else {
+                resp.setStatus(200);
+                HttpSession session = req.getSession();
+                session.setAttribute("auth-emp", emp);
                 resp.getWriter().write("Welcome back, " + emp.getFirst() + "! What would you like to do today?");
             }
         } else if (req.getParameter("action").equals("register")){
@@ -80,6 +83,8 @@ public class EmployeeServlet extends HttpServlet {
                 resp.getWriter().write("Sorry, too many users with that name!");
             } else {
                 resp.setStatus(201);
+                HttpSession session = req.getSession();
+                session.setAttribute("auth-emp", emp);
                 resp.getWriter().write("Welcome, " + emp.getFirst() + "! Your access level is: " + emp.getLevel() + ". What would you like to do today?");
             }
         }
@@ -89,32 +94,40 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getParameter("action").equals("promotion")) {
-            HashMap<String, Object> jsonInput = mapper.readValue(req.getInputStream(), HashMap.class);
-            Employee employee = es.getEmployee((String) jsonInput.get("username"));
-            if (!employee.getLevel().equals(Level.valueOf((String) jsonInput.get("level")))) {
-                Employee emp = es.updateEmployeeAccess((String) jsonInput.get("username"), Level.valueOf((String) jsonInput.get("level")));
-                String responsePayload = mapper.writeValueAsString((emp));
-                //if (!jsonInput.equals("Manager") | !jsonInput.equals("Associate") | !jsonInput.equals("Supervisor")) {
-                if (responsePayload.equals("null")){
-                    resp.setStatus(400);
-                    resp.getWriter().write("Sorry, please make sure the username and access level is correct");
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            Employee loggedInEmployee = (Employee) session.getAttribute("auth-emp");
+            if (!loggedInEmployee.getLevel().equals(Level.Manager) && !loggedInEmployee.getLevel().equals(Level.Supervisor)){
+                resp.setStatus(403);
+                resp.getWriter().write("Sorry, only Managers and Supervisors may adjust access level.");
+            }
+            if (req.getParameter("action").equals("promotion")) {
+                HashMap<String, Object> jsonInput = mapper.readValue(req.getInputStream(), HashMap.class);
+                Employee employee = es.getEmployee((String) jsonInput.get("username"));
+                if (!employee.getLevel().equals(Level.valueOf((String) jsonInput.get("level")))) {
+                    Employee emp = es.updateEmployeeAccess((String) jsonInput.get("username"), Level.valueOf((String) jsonInput.get("level")));
+                    String responsePayload = mapper.writeValueAsString((emp));
+                    //if (!jsonInput.equals("Manager") | !jsonInput.equals("Associate") | !jsonInput.equals("Supervisor")) {
+                    if (responsePayload.equals("null")) {
+                        resp.setStatus(400);
+                        resp.getWriter().write("Sorry, please make sure the username and access level is correct");
 //            } else if (emp.getLevel() == (emp.getLevel())) {
 //                resp.getWriter().write("Sorry, " + emp.getFirst() + "'s access level is already " + emp.getLevel());
+                    } else {
+                        resp.setStatus(200);
+                        resp.getWriter().write("Thank you, " + emp.getFirst() + "'s access has been updated to " + emp.getLevel());
+                    }
                 } else {
-                    resp.setStatus(200);
-                    resp.getWriter().write("Thank you, " + emp.getFirst() + "'s access has been updated to " + emp.getLevel());
+                    resp.setStatus(400);
+                    resp.getWriter().write("Sorry, " + employee.getFirst() + "'s access level is already " + employee.getLevel());
                 }
-            } else {
-                resp.setStatus(400);
-                resp.getWriter().write("Sorry, " + employee.getFirst() + "'s access level is already " + employee.getLevel());
             }
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(true);
+        HttpSession session = req.getSession(false);
         if (session != null){
             session.invalidate();
             resp.getWriter().write("Thanks for logging in! See you next time!");

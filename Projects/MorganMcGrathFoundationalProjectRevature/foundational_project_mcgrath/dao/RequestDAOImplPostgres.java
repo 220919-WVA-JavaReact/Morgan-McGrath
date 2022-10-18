@@ -120,7 +120,7 @@ public class RequestDAOImplPostgres implements RequestDAO {
     }
 
     @Override
-    public List<Request> getRequestByApproval (String approval){
+    public List<Request> getRequestByApproval(String approval){
         List<Request> requests = new ArrayList<>();
         try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "SELECT * FROM reimbursement_requests WHERE approval_status = ? ORDER BY reimbursement_id";
@@ -280,5 +280,72 @@ public class RequestDAOImplPostgres implements RequestDAO {
         }
 
         return request;
+    }
+    public List<Request> getAllManager(String approval){
+        List<Request> requests = new ArrayList<>();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM reimbursement_requests WHERE approval_status = ? ORDER BY reimbursement_id";
+            PreparedStatement stmnt = conn.prepareStatement(sql);
+            stmnt.setString(1, approval);
+            ResultSet rs;
+
+
+            if ((rs = stmnt.executeQuery()) != null) {
+                while (rs.next()) {
+
+                    int reimbursement_id = rs.getInt("reimbursement_id");
+                    String username = rs.getString("username");
+                    String title = rs.getString("title");
+                    int amount = rs.getInt("amount");
+                    String location = rs.getString("location");
+                    String type = rs.getString("type");
+                    String receivedApproval = rs.getString("approval_status");
+
+                    Request req = new Request(reimbursement_id, username, title, amount, location, type, receivedApproval);
+                    requests.add(req);
+                }
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        return requests;
+    }
+
+    public List<Request> getAllUser(String username){
+        List<Request> requests = new ArrayList<>();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM reimbursement_requests WHERE username = ? && approval_status = 'pending' ORDER BY reimbursement_id";
+            PreparedStatement stmnt = conn.prepareStatement(sql);
+            stmnt.setString(1, username);
+            ResultSet rs;
+
+
+            if ((rs = stmnt.executeQuery()) != null) {
+                while (rs.next()) {
+
+                    int reimbursement_id = rs.getInt("reimbursement_id");
+                    String receivedUsername = rs.getString("username");
+                    String title = rs.getString("title");
+                    int amount = rs.getInt("amount");
+                    String location = rs.getString("location");
+                    String type = rs.getString("type");
+                    String approval = rs.getString("approval_status");
+
+                    Request req = new Request(reimbursement_id, receivedUsername, title, amount, location, type, approval);
+                    requests.add(req);
+                }
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+
+        return requests;
     }
 }
