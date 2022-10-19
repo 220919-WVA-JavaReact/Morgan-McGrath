@@ -97,14 +97,14 @@ public class EmployeeServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         if (session != null) {
             Employee loggedInEmployee = (Employee) session.getAttribute("auth-emp");
-            if (!loggedInEmployee.getLevel().equals(Level.Manager) && !loggedInEmployee.getLevel().equals(Level.Supervisor)){
-                resp.setStatus(403);
-                resp.getWriter().write("Sorry, only Managers and Supervisors may adjust access level.");
-            }
             if (req.getParameter("action").equals("promotion")) {
+
                 HashMap<String, Object> jsonInput = mapper.readValue(req.getInputStream(), HashMap.class);
                 Employee employee = es.getEmployee((String) jsonInput.get("username"));
-                if (!employee.getLevel().equals(Level.valueOf((String) jsonInput.get("level")))) {
+                if (!loggedInEmployee.getLevel().equals(Level.Manager) && !loggedInEmployee.getLevel().equals(Level.Supervisor)){
+                    resp.setStatus(403);
+                    resp.getWriter().write("Sorry, only Managers and Supervisors may adjust access level.");
+                } else if (!employee.getLevel().equals(Level.valueOf((String) jsonInput.get("level")))) {
                     Employee emp = es.updateEmployeeAccess((String) jsonInput.get("username"), Level.valueOf((String) jsonInput.get("level")));
                     String responsePayload = mapper.writeValueAsString((emp));
                     //if (!jsonInput.equals("Manager") | !jsonInput.equals("Associate") | !jsonInput.equals("Supervisor")) {

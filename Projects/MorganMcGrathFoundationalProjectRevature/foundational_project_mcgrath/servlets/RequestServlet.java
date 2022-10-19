@@ -25,30 +25,30 @@
 
         protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    //        resp.setStatus(200); //200 by default
-    //        resp.setHeader("Content-type", "text/plain");
-    //        resp.setHeader("example-response-header", "some-example-value");
-    //        resp.getWriter().write("Welcome to the project!\n");
-    //        resp.getWriter().write("This site is under construction right now, but we will have it up and running soon!\n");
-    //        resp.getWriter().write("Expect this to transform into a log in page, which will lead into a profile depending on access level\n");
-    //        resp.getWriter().write("\nCurrent time: " + LocalDateTime.now());
+            //        resp.setStatus(200); //200 by default
+            //        resp.setHeader("Content-type", "text/plain");
+            //        resp.setHeader("example-response-header", "some-example-value");
+            //        resp.getWriter().write("Welcome to the project!\n");
+            //        resp.getWriter().write("This site is under construction right now, but we will have it up and running soon!\n");
+            //        resp.getWriter().write("Expect this to transform into a log in page, which will lead into a profile depending on access level\n");
+            //        resp.getWriter().write("\nCurrent time: " + LocalDateTime.now());
 
-    //        if (req.getParameter("action").equals("pending")){
-    //            Request request = mapper.readValue(req.getInputStream(), Request.class);
-    //            if (request.getUsername().equals("")){
-    //                resp.setStatus(400);
-    //                resp.getWriter().write("Sorry, make sure all information is entered correctly");
-    //            } else {
-    //                resp.setStatus(200);
-    //                Request r = rs.getAllPending(request.getUsername());
-    //                String responsePayload = mapper.writeValueAsString(r);
-    //                resp.getWriter().write("Your pending tickets are: ");
-    //                resp.getWriter().write(r.getReimbursement_id() + ": " + r.getTitle() + " for " + r.getAmount());
-    //            }
-    //
-    //        } else if (req.getParameter("action").equals("all")){
-    //            System.out.println("Pending, ignore this");
-    //        }
+            //        if (req.getParameter("action").equals("pending")){
+            //            Request request = mapper.readValue(req.getInputStream(), Request.class);
+            //            if (request.getUsername().equals("")){
+            //                resp.setStatus(400);
+            //                resp.getWriter().write("Sorry, make sure all information is entered correctly");
+            //            } else {
+            //                resp.setStatus(200);
+            //                Request r = rs.getAllPending(request.getUsername());
+            //                String responsePayload = mapper.writeValueAsString(r);
+            //                resp.getWriter().write("Your pending tickets are: ");
+            //                resp.getWriter().write(r.getReimbursement_id() + ": " + r.getTitle() + " for " + r.getAmount());
+            //            }
+            //
+            //        } else if (req.getParameter("action").equals("all")){
+            //            System.out.println("Pending, ignore this");
+            //        }
         }
 
         @Override
@@ -118,50 +118,56 @@
                             resp.getWriter().write("Thank you, Request " + request.getReimbursement_id() + " has been processed and it's now " + request.isApproval());
                         }
                     }
-                    } else if (req.getParameter("action").equals("pending")) {
-                        Request request = mapper.readValue(req.getInputStream(), Request.class);
-                        if (request.isApproval().equals("")) {
-                            resp.setStatus(400);
-                            resp.getWriter().write("Sorry, make sure all information is entered correctly");
+                } else if (req.getParameter("action").equals("pending")) {
+                    Request request = mapper.readValue(req.getInputStream(), Request.class);
+                    if (request.isApproval().equals("")) {
+                        resp.setStatus(400);
+                        resp.getWriter().write("Sorry, make sure all information is entered correctly");
+                    } else {
+                        if (!loggedInEmployee.getLevel().equals(Level.Manager) && !loggedInEmployee.getLevel().equals(Level.Supervisor)) {
+                            resp.setStatus(403);
+                            resp.getWriter().write("Sorry, only Managers and Supervisors may view pending tickets.");
                         } else {
-                            if (loggedInEmployee.getLevel() != Level.Manager && loggedInEmployee.getLevel() != Level.Supervisor) {
-                                resp.setStatus(403);
-                                resp.getWriter().write("Sorry, only Managers and Supervisors may view pending tickets.");
-                            } else {
-                                resp.setStatus(200);
-                                resp.getWriter().write("The current pending tickets are: ");
-                                List<Request> requests = rs.getAllPending(request.getUsername());
-                                if (requests.size() > 0) {
-                                    for (Request r : requests) {
-                                        String responsePayload = mapper.writeValueAsString(request);
-                                        resp.getWriter().write(" / " + r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername());
-                                    }
-                                } else {
-                                    resp.getWriter().write("Looks like all tickets have been processed!");
+                            resp.setStatus(200);
+                            resp.getWriter().write("The current pending tickets are: ");
+                            List<Request> requests = rs.getAllPending(request.getUsername());
+                            if (requests.size() > 0) {
+                                for (Request r : requests) {
+                                    String responsePayload = mapper.writeValueAsString(request);
+                                    resp.getWriter().write(" / " + r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername());
                                 }
+                            } else {
+                                resp.getWriter().write("Looks like all tickets have been processed!");
                             }
                         }
-                    } else if (req.getParameter("action").equals("user")) {
-                        Request request = mapper.readValue(req.getInputStream(), Request.class);
-                        if (loggedInEmployee.getLevel().equals(Level.Manager) && loggedInEmployee.getLevel().equals(Level.Supervisor)) {
-                            resp.setStatus(200);
-                            List<Request> requests = rs.getAllManager(request.isApproval());
-                            for (Request r : requests) {
-                                String responsePayload = mapper.writeValueAsString(request);
-                                resp.getWriter().write(" / " + r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername() + ", current status: " + r.isApproval());
-                            }
-                        } else {
-                            resp.setStatus(200);
-                            List<Request> requests = rs.getAllUser(loggedInEmployee.getUsername());
-                            for (Request r : requests) {
+                    }
+                } else if (req.getParameter("action").equals("user")) {
+                    Request request = mapper.readValue(req.getInputStream(), Request.class);
+//                        if (loggedInEmployee.getLevel().equals(Level.Manager) && loggedInEmployee.getLevel().equals(Level.Supervisor)) {
+//                            resp.setStatus(200);
+//                            List<Request> requests = rs.getAllManager(request.isApproval());
+//                            for (Request r : requests) {
+//                                String responsePayload = mapper.writeValueAsString(request);
+//                                resp.getWriter().write(" / " + r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername() + ", current status: " + r.isApproval());
+//                            }
+//                        } else
+                    //{
+                        resp.setStatus(200);
+                        List<Request> requests = rs.getAllUser(loggedInEmployee.getUsername(), request.isApproval());
+//                        resp.getWriter().write(mapper.writeValueAsString(requests));
+                        for (Request r : requests) {
+                            if (requests.size() > 0) {
                                 String responsePayload = mapper.writeValueAsString(request);
                                 resp.getWriter().write(" / " + r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + ", current status: " + r.isApproval());
+                            } else {
+                                resp.getWriter().write("There are no tickets with status " + request.isApproval());
                             }
                         }
 
-                    }
+                   // }
                 }
             }
         }
+    }
 
 

@@ -22,6 +22,6 @@ public interface RequestDAO {
     Request getRequestById(int reimbursement_id);
     List<Request> getAllManager(String approval);
 
-    List<Request> getAllUser(String username);
+    List<Request> getAllUser(String username, String approval);
 
 }

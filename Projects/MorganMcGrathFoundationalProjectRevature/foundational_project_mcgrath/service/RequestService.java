@@ -155,8 +155,8 @@ public class RequestService {
         return requests;
     }
 
-    public List<Request> getAllUser(String username){
-        List<Request> requests = rd.getAllUser(username);
+    public List<Request> getAllUser(String username, String approval){
+        List<Request> requests = rd.getAllUser(username, approval);
         return requests;
     }
 

@@ -315,12 +315,13 @@ public class RequestDAOImplPostgres implements RequestDAO {
         return requests;
     }
 
-    public List<Request> getAllUser(String username){
+    public List<Request> getAllUser(String username, String approval){
         List<Request> requests = new ArrayList<>();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM reimbursement_requests WHERE username = ? && approval_status = 'pending' ORDER BY reimbursement_id";
+            String sql = "SELECT * FROM reimbursement_requests WHERE username = ? AND approval_status = ? ORDER BY reimbursement_id";
             PreparedStatement stmnt = conn.prepareStatement(sql);
             stmnt.setString(1, username);
+            stmnt.setString(2, approval);
             ResultSet rs;
 
 
@@ -333,9 +334,9 @@ public class RequestDAOImplPostgres implements RequestDAO {
                     int amount = rs.getInt("amount");
                     String location = rs.getString("location");
                     String type = rs.getString("type");
-                    String approval = rs.getString("approval_status");
+                    String receivedApproval = rs.getString("approval_status");
 
-                    Request req = new Request(reimbursement_id, receivedUsername, title, amount, location, type, approval);
+                    Request req = new Request(reimbursement_id, receivedUsername, title, amount, location, type, receivedApproval);
                     requests.add(req);
                 }
             }
