@@ -153,36 +153,40 @@ public class RequestDAOImplPostgres implements RequestDAO {
     }
 
     @Override
-    public Request updateRequest(int reimbursement_id, String approval_status) {
+    public boolean updateRequest(int reimbursement_id, String approval_status) {
 
-        Request req = new Request();
+//        Request req = new Request();
         try (Connection conn = ConnectionUtil.getConnection()) {
 
-            String sql = "UPDATE reimbursement_requests SET approval_status = ? WHERE reimbursement_id = ? RETURNING *";
+            String sql = "UPDATE reimbursement_requests SET approval_status = ? WHERE reimbursement_id = ? AND approval_status = ?";
             PreparedStatement stmnt = conn.prepareStatement(sql);
             stmnt.setString(1, approval_status);
             stmnt.setInt(2, reimbursement_id);
+            stmnt.setString(3, "pending");
 
-            ResultSet rs;
-            if ((rs = stmnt.executeQuery()) != null) {
-                rs.next();
-                int receivedId = rs.getInt("reimbursement_id");
-                String receivedUsername = rs.getString("username");
-                String title = rs.getString("title");
-                int amount = rs.getInt("amount");
-                String location = rs.getString("location");
-                String receivedApproval = rs.getString("approval_status");
-
-                req = new Request(receivedId, receivedUsername, title, amount, location, receivedApproval);
-                return req;
-            }
-
+//            ResultSet rs;
+//            if ((rs = stmnt.executeQuery()) != null) {
+//                rs.next();
+//                int receivedId = rs.getInt("reimbursement_id");
+//                String receivedUsername = rs.getString("username");
+//                String title = rs.getString("title");
+//                int amount = rs.getInt("amount");
+//                String location = rs.getString("location");
+//                String receivedApproval = rs.getString("approval_status");
+//
+//                req = new Request(receivedId, receivedUsername, title, amount, location, receivedApproval);
+                int result = stmnt.executeUpdate();
+                System.out.println(result);
+                if (result == 1){
+                    return true;
+                }
+            //}
 
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Sorry, there was an error.");
         }
-        return null;
+        return false;
     }
 
     @Override

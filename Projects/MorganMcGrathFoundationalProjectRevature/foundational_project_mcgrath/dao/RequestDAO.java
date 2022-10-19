@@ -13,7 +13,7 @@ public interface RequestDAO {
 
     List<Request> getRequestByApproval(String approval);
 
-    Request updateRequest(int reimbursement_id, String approval_status);
+    boolean updateRequest(int reimbursement_id, String approval_status);
 
     List<Request> getAllPending();
 

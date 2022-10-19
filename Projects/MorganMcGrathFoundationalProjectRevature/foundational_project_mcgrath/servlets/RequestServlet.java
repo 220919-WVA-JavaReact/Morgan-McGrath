@@ -27,7 +27,7 @@ public class RequestServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         if (session != null) {
             Employee loggedInEmployee = (Employee) session.getAttribute("auth-emp");
-            if (req.getParameter("action").equals("get-tickets-by-status")){
+            if (req.getParameter("action").equals("get-tickets-by-status")) {
                 if (loggedInEmployee.getLevel() != Level.Manager && loggedInEmployee.getLevel() != Level.Supervisor) {
                     resp.setStatus(403);
                     resp.getWriter().write("Sorry, only Managers and Supervisors have access to all tickets.");
@@ -61,7 +61,7 @@ public class RequestServlet extends HttpServlet {
                         }
                     }
                 }
-            } else if (req.getParameter("action").equals("get-tickets-associate")){
+            } else if (req.getParameter("action").equals("get-tickets-associate")) {
                 if (req.getParameter("status").equals("pending")) {
                     resp.setStatus(200);
                     resp.getWriter().write("The current pending tickets are: ");
@@ -129,20 +129,29 @@ public class RequestServlet extends HttpServlet {
                 if (request.getUsername().equals("")) {
                     resp.setStatus(400);
                     resp.getWriter().write("Sorry, please make sure all information is correct.");
+                } else if (request.isApproval().equals("pending")){
+                        resp.setStatus(403);
+                        resp.getWriter().write("Sorry, please either deny or approve request");
                 } else {
                     if (loggedInEmployee.getLevel() != Level.Manager && loggedInEmployee.getLevel() != Level.Supervisor) {
                         resp.setStatus(403);
                         resp.getWriter().write("Sorry, only Managers and Supervisors may process tickets.");
                     } else {
-                        resp.setStatus(200);
                         String responsePayload = mapper.writeValueAsString(request);
-                        Request r = rs.updateRequest(request.getReimbursement_id(), request.isApproval());
-                        resp.getWriter().write("Thank you, Request " + request.getReimbursement_id() + " has been processed and it's now " + request.isApproval());
+                        boolean r = rs.updateRequest(request.getReimbursement_id(), request.isApproval());
+                        if (r) {
+                            resp.setStatus(200);
+                            resp.getWriter().write("Thank you, Request " + request.getReimbursement_id() + " has been processed and it's now " + request.isApproval());
+                        } else {
+                            resp.setStatus(403);
+                            resp.getWriter().write("Sorry, this ticket has already been processed");
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 

@@ -197,7 +197,7 @@ public class RequestService {
 
     }
 
-    public Request updateRequest(int reimbursement_id, String approval){
+    public boolean updateRequest(int reimbursement_id, String approval){
         return rd.updateRequest(reimbursement_id, approval);
     }
     public void getRequestByUsername (String username){
