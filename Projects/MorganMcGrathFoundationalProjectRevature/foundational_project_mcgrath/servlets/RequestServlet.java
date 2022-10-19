@@ -124,14 +124,48 @@ public class RequestServlet extends HttpServlet {
                     String responsePayload = mapper.writeValueAsString(r);
                     resp.getWriter().write("Thanks for your submission! " + r.getReimbursement_id() + " has been created and is currently " + r.isApproval());
                 }
-            } else if (req.getParameter("action").equals("process")) {
+            }
+//            } else if (req.getParameter("action").equals("process")) {
+//                Request request = mapper.readValue(req.getInputStream(), Request.class);
+//                if (request.getUsername().equals("")) {
+//                    resp.setStatus(400);
+//                    resp.getWriter().write("Sorry, please make sure all information is correct.");
+//                } else if (request.isApproval().equals("pending")){
+//                        resp.setStatus(403);
+//                        resp.getWriter().write("Sorry, please either deny or approve request");
+//                } else {
+//                    if (loggedInEmployee.getLevel() != Level.Manager && loggedInEmployee.getLevel() != Level.Supervisor) {
+//                        resp.setStatus(403);
+//                        resp.getWriter().write("Sorry, only Managers and Supervisors may process tickets.");
+//                    } else {
+//                        String responsePayload = mapper.writeValueAsString(request);
+//                        boolean r = rs.updateRequest(request.getReimbursement_id(), request.isApproval());
+//                        if (r) {
+//                            resp.setStatus(200);
+//                            resp.getWriter().write("Thank you, Request " + request.getReimbursement_id() + " has been processed and it's now " + request.isApproval());
+//                        } else {
+//                            resp.setStatus(403);
+//                            resp.getWriter().write("Sorry, this ticket has already been processed");
+//                        }
+//                    }
+//                }
+//            }
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            Employee loggedInEmployee = (Employee) session.getAttribute("auth-emp");
+            if (req.getParameter("action").equals("process")) {
                 Request request = mapper.readValue(req.getInputStream(), Request.class);
                 if (request.getUsername().equals("")) {
                     resp.setStatus(400);
                     resp.getWriter().write("Sorry, please make sure all information is correct.");
-                } else if (request.isApproval().equals("pending")){
-                        resp.setStatus(403);
-                        resp.getWriter().write("Sorry, please either deny or approve request");
+                } else if (request.isApproval().equals("pending")) {
+                    resp.setStatus(403);
+                    resp.getWriter().write("Sorry, please either deny or approve request");
                 } else {
                     if (loggedInEmployee.getLevel() != Level.Manager && loggedInEmployee.getLevel() != Level.Supervisor) {
                         resp.setStatus(403);
