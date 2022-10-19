@@ -93,15 +93,20 @@
                     if (request.isApproval().equals("")) {
                         resp.setStatus(400);
                         resp.getWriter().write("Sorry, make sure all information is entered correctly");
-                    } else if (loggedInEmployee.getUsername().equals(request.getUsername())) {
-                        resp.setStatus(200);
-                        resp.getWriter().write("The requested tickets are: ");
-                        List<Request> requests = rs.getRequestByApproval(request.isApproval());
-                        for (Request r : requests) {
-                            String responsePayload = mapper.writeValueAsString(r);
-                            resp.getWriter().write(r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername() + " / ");
+                    } else { //if (loggedInEmployee.getUsername().equals(request.getUsername()))
+                        if (!loggedInEmployee.getLevel().equals(Level.Manager) && !loggedInEmployee.getLevel().equals(Level.Supervisor)) {
+                            resp.setStatus(403);
+                            resp.getWriter().write("Sorry, only Managers and Supervisors have complete access to tickets.");
+                        } else {
+                            resp.setStatus(200);
+                            resp.getWriter().write("The requested tickets are: ");
+                            List<Request> requests = rs.getRequestByApproval(request.isApproval());
+                            for (Request r : requests) {
+                                String responsePayload = mapper.writeValueAsString(r);
+                                resp.getWriter().write(r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername() + " / ");
+                            }
                         }
-                    }
+                    } //extra take out if it doesn't work
                 } else if (req.getParameter("action").equals("process")) {
                     Request request = mapper.readValue(req.getInputStream(), Request.class);
                     if (request.getUsername().equals("")) {
@@ -143,15 +148,14 @@
                     }
                 } else if (req.getParameter("action").equals("user")) {
                     Request request = mapper.readValue(req.getInputStream(), Request.class);
-//                        if (loggedInEmployee.getLevel().equals(Level.Manager) && loggedInEmployee.getLevel().equals(Level.Supervisor)) {
-//                            resp.setStatus(200);
-//                            List<Request> requests = rs.getAllManager(request.isApproval());
-//                            for (Request r : requests) {
-//                                String responsePayload = mapper.writeValueAsString(request);
-//                                resp.getWriter().write(" / " + r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername() + ", current status: " + r.isApproval());
-//                            }
-//                        } else
-                    //{
+                    if (loggedInEmployee.getLevel().equals(Level.Manager) && loggedInEmployee.getLevel().equals(Level.Supervisor)) {
+                        resp.setStatus(200);
+                        List<Request> requests = rs.getAllManager(request.isApproval());
+                        for (Request r : requests) {
+                            String responsePayload = mapper.writeValueAsString(request);
+                            resp.getWriter().write(" / " + r.getReimbursement_id() + ": " + r.getTitle() + " for $" + r.getAmount() + " from " + r.getUsername() + ", current status: " + r.isApproval());
+                        }
+                    } else {
                         resp.setStatus(200);
                         List<Request> requests = rs.getAllUser(loggedInEmployee.getUsername(), request.isApproval());
 //                        resp.getWriter().write(mapper.writeValueAsString(requests));
@@ -164,7 +168,8 @@
                             }
                         }
 
-                   // }
+                        // }
+                    }
                 }
             }
         }

@@ -151,7 +151,7 @@ public class RequestService {
     }
 
     public List<Request> getAllManager(String approval){
-        List<Request> requests = rd.getAllRequest();
+        List<Request> requests = rd.getAllManager(approval);
         return requests;
     }
 
