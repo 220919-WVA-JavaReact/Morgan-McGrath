@@ -61,31 +61,42 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
         if(req.getParameter("action").equals("login")) {
-            Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
-            Employee emp = es.login(employee.getUsername(), employee.getPassword());
-            String responsePayload = mapper.writeValueAsString(emp);
-            if (responsePayload.equals("null")) {
-                resp.setStatus(400);
-                resp.getWriter().write("Sorry, that login was incorrect. Please check your credentials.");
+            if (session != null){
+                resp.setStatus(403);
+                resp.getWriter().write("Sorry, you are already logged in");
             } else {
-                resp.setStatus(200);
-                HttpSession session = req.getSession();
+                Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
+                Employee emp = es.login(employee.getUsername(), employee.getPassword());
+                session = req.getSession();
                 session.setAttribute("auth-emp", emp);
-                resp.getWriter().write("Welcome back, " + emp.getFirst() + "! What would you like to do today?");
+                String responsePayload = mapper.writeValueAsString(emp);
+                if (responsePayload.equals("null")) {
+                    resp.setStatus(400);
+                    resp.getWriter().write("Sorry, that login was incorrect. Please check your credentials.");
+                } else {
+                    resp.setStatus(200);
+                    resp.getWriter().write("Welcome back, " + emp.getFirst() + "! What would you like to do today?");
+                }
             }
-        } else if (req.getParameter("action").equals("register")){
-            Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
-            Employee emp = es.register(employee.getFirst(), employee.getLast(), employee.getUsername(), employee.getPassword());
-            String responsePayload = mapper.writeValueAsString(emp);
-            if (responsePayload.equals("null")){
-                resp.setStatus(400);
-                resp.getWriter().write("Sorry, too many users with that name!");
+        } else if (req.getParameter("action").equals("register")) {
+            if (session != null) {
+                resp.setStatus(403);
+                resp.getWriter().write("Sorry, you are already logged in");
             } else {
-                resp.setStatus(201);
-                HttpSession session = req.getSession();
-                session.setAttribute("auth-emp", emp);
-                resp.getWriter().write("Welcome, " + emp.getFirst() + "! Your access level is: " + emp.getLevel() + ". What would you like to do today?");
+                Employee employee = mapper.readValue(req.getInputStream(), Employee.class);
+                Employee emp = es.register(employee.getFirst(), employee.getLast(), employee.getUsername(), employee.getPassword());
+                String responsePayload = mapper.writeValueAsString(emp);
+                if (responsePayload.equals("null")) {
+                    resp.setStatus(400);
+                    resp.getWriter().write("Sorry, too many users with that name!");
+                } else {
+                    resp.setStatus(201);
+                    session = req.getSession();
+                    session.setAttribute("auth-emp", emp);
+                    resp.getWriter().write("Welcome, " + emp.getFirst() + "! Your access level is: " + emp.getLevel() + ". What would you like to do today?");
+                }
             }
         }
 
