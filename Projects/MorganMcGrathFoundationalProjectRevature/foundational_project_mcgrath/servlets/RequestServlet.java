@@ -101,7 +101,7 @@ public class RequestServlet extends HttpServlet {
                 }
             }
         } else {
-            resp.setStatus(403);
+            resp.setStatus(401);
             resp.getWriter().write("Sorry, you must be logged in to use this feature");
         }
 
@@ -150,6 +150,9 @@ public class RequestServlet extends HttpServlet {
 //                    }
 //                }
 //            }
+        } else {
+            resp.setStatus(401);
+            resp.getWriter().write("Please make sure you are logged in");
         }
     }
 
@@ -183,6 +186,9 @@ public class RequestServlet extends HttpServlet {
                     }
                 }
             }
+        } else {
+            resp.setStatus(401);
+            resp.getWriter().write("Sorry, you must be logged in to use this feature.");
         }
     }
 }

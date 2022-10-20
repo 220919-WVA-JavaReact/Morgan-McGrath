@@ -70,7 +70,7 @@ public class EmployeeServlet extends HttpServlet {
                 if (responsePayload.equals("null")) {
                     resp.setStatus(400);
                     resp.getWriter().write("Sorry, that login was incorrect. Please check your credentials.");
-                } else {
+                }  else {
                     resp.setStatus(200);
                     resp.getWriter().write("Welcome back, " + emp.getFirst() + "! What would you like to do today?");
                 }
@@ -84,8 +84,14 @@ public class EmployeeServlet extends HttpServlet {
                 Employee emp = es.register(employee.getFirst(), employee.getLast(), employee.getUsername(), employee.getPassword());
                 String responsePayload = mapper.writeValueAsString(emp);
                 if (responsePayload.equals("null")) {
-                    resp.setStatus(400);
+                    resp.setStatus(409);
                     resp.getWriter().write("Sorry, too many users with that name!");
+                } else if (employee.getFirst().equals("") || employee.getLast().equals("") || employee.getPassword().equals("") || employee.getUsername().equals("")) {
+                    resp.setStatus(400);
+                    resp.getWriter().write("Please make sure you have entered the required information");
+                } else if (employee.getUsername().equals("coffee") && employee.getPassword().equals("teapots")) {
+                    resp.setStatus(418);
+                    resp.getWriter().write("Sorry, teapots can't be used for coffee");
                 } else {
                     resp.setStatus(201);
                     session = req.getSession();
@@ -94,8 +100,10 @@ public class EmployeeServlet extends HttpServlet {
                 }
             }
         }
-
     }
+
+
+
 
 
     @Override
@@ -124,6 +132,9 @@ public class EmployeeServlet extends HttpServlet {
                     resp.getWriter().write("Sorry, " + employee.getFirst() + "'s access level is already " + employee.getLevel());
                 }
             }
+        } else {
+            resp.setStatus(401);
+            resp.getWriter().write("Sorry, you must be logged in to use this feature.");
         }
     }
 
@@ -133,6 +144,8 @@ public class EmployeeServlet extends HttpServlet {
         if (session != null){
             session.invalidate();
             resp.getWriter().write("Thanks for logging in! See you next time!");
+        } else {
+            resp.setStatus(401);
         }
     }
 }
